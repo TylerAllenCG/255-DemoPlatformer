@@ -7,7 +7,13 @@
 	public class Player extends MovieClip {
 
 		private var gravity: Point = new Point(0, 100);
+		
 		private var velocity: Point = new Point(1, 5);
+		
+		private const HORIZONTAL_ACCELERATION:Number = 100;
+		
+		private const HORIZONTAL_DECELERATION = 100;
+		
 
 
 		public function Player() {
@@ -16,7 +22,20 @@
 
 		public function update(): void {
 
-
+			if(KeyboardInput.keyLeft)velocity.x -= HORIZONTAL_ACCELERATION *dtTime. dt;
+			if(KeyboardInput.keyRight)velocity.x += HORIZONTAL_ACCELERATION *dtTime. dt;
+			
+			if(!KeyboardInput.keyLeft && !KeyboardInput.keyRight){
+				if(velocity.x < 0){//moving left
+					velocity.x += HORIZONTAL_DECELERATION * Time.dt;
+					if(velocity.x > 0) velocity.x = 0;//clamp
+				}
+				if(velocity.x > 0){//moving right
+					velocity.x -= HORIZONTAL_DECELERATION * Time.dt;
+					if(velocity.x < 0) velocity.x = 0;//clamp
+				}
+			}
+			
 			doPhysics();
 
 			detectGround();
@@ -33,11 +52,11 @@
 		}
 
 		private function doPhysics(): void {
-			// apply gravity to velocity
+			// apply gravity to velocity:
 			velocity.x += gravity.x * Time.dt;
 			velocity.y += gravity.y * Time.dt;
 
-			// apply velocity to position
+			// apply velocity to position:
 			x += velocity.x * Time.dt;
 			y += velocity.y * Time.dt;
 		}

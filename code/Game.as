@@ -9,7 +9,7 @@
 		
 		public function Game() {
 			// constructor code
-			
+			KeyboardInput.setup(stage);
 			addEventListener(Event.ENTER_FRAME, gameLoop);
 		}
 		

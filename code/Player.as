@@ -10,9 +10,11 @@
 		
 		private var velocity: Point = new Point(1, 5);
 		
-		private const HORIZONTAL_ACCELERATION:Number = 100;
+		private var maxSpeed: Number = 200;
 		
-		private const HORIZONTAL_DECELERATION = 100;
+		private const HORIZONTAL_ACCELERATION:Number = 800;
+		
+		private const HORIZONTAL_DECELERATION:Number = 800;
 		
 
 
@@ -55,6 +57,10 @@
 			// apply gravity to velocity:
 			velocity.x += gravity.x * Time.dt;
 			velocity.y += gravity.y * Time.dt;
+			
+			// constrain to max speed:
+			if(veloctity.x > maxSpeed) velocity.x = maxSpeed;
+			if(veloctity.x < -maxSpeed) velocity.x = -maxSpeed;
 
 			// apply velocity to position:
 			x += velocity.x * Time.dt;

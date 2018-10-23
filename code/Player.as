@@ -25,7 +25,7 @@
 
 		public function update(): void {
 
-			if(KeyboardInput.OnKeyDown){
+			if(KeyboardInput.OnKeyDown){////////
 				trace("jump");
 			}
 			

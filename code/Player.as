@@ -9,7 +9,7 @@
 	 */
 	public class Player extends MovieClip {
 		/** Holds the base gravity that the player will always be reset to. */
-		private const baseGravity: Point = new Point(0, 1000);
+		private const baseGravity: Point = new Point(0, 2000);
 		/** Holds the curret gravity of the player. */
 		private var gravity: Point = new Point(0, 1000);
 		/** The X and Y velocity of the player. */
@@ -27,7 +27,7 @@
 		/** The rate at which the player decelerate on the horizontal axis. */
 		private const HORIZONTAL_DECELERATION: Number = 800;
 		/** The rate at which the player can accelerate on the vertical axis. */
-		private const VERTICAL_ACCELERATION: Number = 2000;
+		private const VERTICAL_ACCELERATION: Number = 1500;
 
 		/**
 		 * The constructor code for the player.
@@ -94,11 +94,12 @@
 		 * This function looks at the keyboard input to tell when the player can and should jump.
 		 */
 		private function handleJump(): void {
-			if (KeyboardInput.OnKeyDown(Keyboard.SPACE) && airTime < .4 && jumpCount <= 2) {
+			if (KeyboardInput.OnKeyDown(Keyboard.SPACE) && airTime < .4 && jumpCount <= 1) {
 				isJumping = true;
 				gravity.y = 500;
 				jumpCount += 1;
 				airTime = 0;
+				velocity.y = -300;
 			}
 			if (KeyboardInput.IsKeyDown(Keyboard.SPACE) && airTime < .3 && isJumping == true) {
 				velocity.y -= VERTICAL_ACCELERATION * Time.dt;

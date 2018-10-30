@@ -21,13 +21,17 @@
 		/** The amount of times the player has jumped since touching the ground (should max at 2). */
 		private var jumpCount: Number = 0;
 		/** Keeps track of if the player is in the air from a jump. */
-		private var isJumping: Boolean = false;
+		private var isGrounded: Boolean = false;
+		/** Keeps track of if the player is moving upward, effects gravity. */
+		private var isJumping:Boolean = false;
 		/** The rate at which the player can accelerate on the horizontal axis. */
 		private const HORIZONTAL_ACCELERATION: Number = 1000;
 		/** The rate at which the player decelerate on the horizontal axis. */
 		private const HORIZONTAL_DECELERATION: Number = 800;
 		/** The rate at which the player can accelerate on the vertical axis. */
 		private const VERTICAL_ACCELERATION: Number = 1500;
+		
+		private var jumpVelocity:Number = 500;
 
 		/**
 		 * The constructor code for the player.
@@ -61,16 +65,20 @@
 		private function detectGround(): void {
 			//look at y position
 			var ground: Number = 350;
-			var softGround: Number = 300;
+			//var softGround: Number = 300;
 			if (y > ground) {
 				y = ground; // clamp
 				velocity.y = 0;
+				airTime = 0;
+				jumpCount = 0;
+				if (isGrounded == false) isGrounded = true;
+				isJumping = false;
 			}
-			if (y > softGround && velocity.y > 0) {
+			/*if (y > softGround && velocity.y > 0) {
 				airTime = 0;
 				jumpCount = 0;
 				if (isJumping == true) isJumping = false;
-			}
+			}*/
 		}
 
 		/**
@@ -98,28 +106,37 @@
 		 */
 		private function handleJump(): void {
 			if (KeyboardInput.OnKeyDown(Keyboard.SPACE) && velocity.y <= 400 && jumpCount <= 1) {
+				isGrounded = false;
 				isJumping = true;
 				//gravity.y = 300;
 				jumpCount += 1;
 				airTime = 0;
-				velocity.y = -500;
+				velocity.y = -jumpVelocity;
 				
 			}
-			if (KeyboardInput.IsKeyDown(Keyboard.SPACE) && airTime < .3 && isJumping == true) {
+			if (KeyboardInput.IsKeyDown(Keyboard.SPACE) && airTime < .3 && isGrounded == false) {
 				//velocity.y -= VERTICAL_ACCELERATION * Time.dt;
-				gravity.y = 10;
-			}else{
+				//gravity.y = 10;
+			}
+			if (!KeyboardInput.IsKeyDown(Keyboard.SPACE)) {
+				isJumping = false;
 				gravity.y = baseGravity.y;
 			}
+			if(velocity.y > 0) isJumping = false;
 		}
 
 		/**
 		 * The physics that govern the player's position.
 		 */
 		private function doPhysics(): void {
+			
+			var gravityMultiplier:Number = .5;
+			
+			if(!isJumping) gravityMultiplier = 1;
+			
 			// apply gravity to velocity:
-			velocity.x += gravity.x * Time.dt;
-			velocity.y += gravity.y * Time.dt;
+			//velocity.x += gravity.x * Time.dt * gravityMultiplier;
+			velocity.y += gravity.y * Time.dt * gravityMultiplier;
 
 			// constrain to max speed:
 			if (velocity.x > maxSpeed) velocity.x = maxSpeed;
@@ -134,7 +151,7 @@
 		 * Counts up the airTime when in the air and reaplys standard gravity after a set amount of air time.
 		 */
 		private function jumpingTimer(): void {
-			if (isJumping == true) {
+			if (isGrounded == false) {
 				airTime += Time.dt;
 				if (airTime > .3) {
 					gravity.y = baseGravity.y;

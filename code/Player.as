@@ -4,7 +4,9 @@
 	import flash.geom.Point;
 	import flash.ui.Keyboard;
 
-
+	/**
+	 * This class contains the behavior of the player object.
+	 */
 	public class Player extends MovieClip {
 		/** Holds the base gravity that the player will always be reset to. */
 		private const baseGravity: Point = new Point(0, 1000);
@@ -27,17 +29,18 @@
 		/** The rate at which the player can accelerate on the vertical axis. */
 		private const VERTICAL_ACCELERATION: Number = 2000;
 
-
-
+		/**
+		 * The constructor code for the player.
+		 * Right now it contains nothing as the player is already placed on the stage to begin with.
+		 */
 		public function Player() {
 			// constructor code
 		} // ends constructor
 
+		/**
+		 * This updates the player object based on physics and the player's input.
+		 */
 		public function update(): void {
-
-			//if(KeyboardInput.OnKeyDown(Keyboard.SPACE)){////////
-			//	trace("jump");
-			//}
 
 			handleWalking();
 
@@ -46,9 +49,12 @@
 			doPhysics();
 
 			detectGround();
-
 		}
 
+		/**
+		 * This function sets a maximum y value that the player can not cross.
+		 * This also adds a small area above the ground where the player can jump again.
+		 */
 		private function detectGround(): void {
 			//look at y position
 			var ground: Number = 350;
@@ -56,7 +62,6 @@
 			if (y > ground) {
 				y = ground; // clamp
 				velocity.y = 0;
-
 			}
 			if (y > softGround && velocity.y > 0) {
 				airTime = 0;
@@ -86,28 +91,28 @@
 		}
 
 		/**
-		 * This function looks at the keyboard input to tell when the player can and should jump.--------------
+		 * This function looks at the keyboard input to tell when the player can and should jump.
 		 */
 		private function handleJump(): void {
-			if (KeyboardInput.OnKeyDown(Keyboard.SPACE) && airTime < .3 && jumpCount <= 2) {
+			if (KeyboardInput.OnKeyDown(Keyboard.SPACE) && airTime < .4 && jumpCount <= 2) {
 				isJumping = true;
 				gravity.y = 500;
 				jumpCount += 1;
 				airTime = 0;
-				//trace(jumpCount);
 			}
 			if (KeyboardInput.IsKeyDown(Keyboard.SPACE) && airTime < .3 && isJumping == true) {
 				velocity.y -= VERTICAL_ACCELERATION * Time.dt;
 			}
 		}
 
+		/**
+		 * The physics that govern the player's position.
+		 */
 		private function doPhysics(): void {
 			// apply gravity to velocity:
 			jumpingPhysics();
 			velocity.x += gravity.x * Time.dt;
 			velocity.y += gravity.y * Time.dt;
-
-
 
 			// constrain to max speed:
 			if (velocity.x > maxSpeed) velocity.x = maxSpeed;
@@ -119,23 +124,16 @@
 		}
 
 		/**
-		 * Controls the altered gravity when jumping.--------------------
+		 * Controls the altered gravity when jumping.
 		 */
 		private function jumpingPhysics(): void {
 			if (isJumping == true) {
 				airTime += Time.dt;
 				if (airTime > .3) {
-					//isJumping = false
-					//if(velocity.y < 0)gravity.y += 200 * Time.dt;
 					gravity.y = baseGravity.y;
 				}
 			}
-			/*if (isJumping == false) {
-				gravity.y = baseGravity.y;
-				airTime = 0;
-			}*/
 		}
-
 
 	} // ends plyer class
 

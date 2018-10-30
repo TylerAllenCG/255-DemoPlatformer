@@ -16,8 +16,6 @@
 		private static var dtScaled: Number = 0;
 		/** A scaler for dtScaled. Use for slowmo and pause effects. */
 		private static var scale: Number = 1;
-		
-	
 
 		/** 
 		 * Updates delta time.
@@ -29,5 +27,7 @@
 			dtScaled = dt * scale;
 			timePrev = time; //cache next frame.
 		}
-	}
-}
+
+	} // Ends class
+
+} // Ends package

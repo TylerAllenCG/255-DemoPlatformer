@@ -15,7 +15,7 @@
 		/** The X and Y velocity of the player. */
 		private var velocity: Point = new Point(0, 0);
 		/** The maximum horizontal Speed the player can reach. */
-		private var maxSpeed: Number = 200;
+		private var maxSpeed: Number = 300;
 		/** The amount of time in seconds the player has been in the air since their last jump. */
 		private var airTime: Number = 0;
 		/** The amount of times the player has jumped since touching the ground (should max at 2). */
@@ -49,6 +49,8 @@
 			doPhysics();
 
 			detectGround();
+			
+			jumpingTimer();
 			//trace(velocity.y);
 		}
 
@@ -95,7 +97,7 @@
 		 * This function looks at the keyboard input to tell when the player can and should jump.
 		 */
 		private function handleJump(): void {
-			if (KeyboardInput.OnKeyDown(Keyboard.SPACE) && velocity.y <= 100 && jumpCount <= 1) {
+			if (KeyboardInput.OnKeyDown(Keyboard.SPACE) && velocity.y <= 400 && jumpCount <= 1) {
 				isJumping = true;
 				//gravity.y = 300;
 				jumpCount += 1;
@@ -116,7 +118,6 @@
 		 */
 		private function doPhysics(): void {
 			// apply gravity to velocity:
-			jumpingPhysics();
 			velocity.x += gravity.x * Time.dt;
 			velocity.y += gravity.y * Time.dt;
 
@@ -130,9 +131,9 @@
 		}
 
 		/**
-		 * Controls the altered gravity when jumping.
+		 * Counts up the airTime when in the air and reaplys standard gravity after a set amount of air time.
 		 */
-		private function jumpingPhysics(): void {
+		private function jumpingTimer(): void {
 			if (isJumping == true) {
 				airTime += Time.dt;
 				if (airTime > .3) {

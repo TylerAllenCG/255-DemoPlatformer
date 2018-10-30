@@ -31,7 +31,9 @@
 		/** The rate at which the player can accelerate on the vertical axis. */
 		private const VERTICAL_ACCELERATION: Number = 1500;
 		
-		private var jumpVelocity:Number = 500;
+		private var jumpVelocity:Number = 600;
+		
+		public var collider:AABB;
 
 		/**
 		 * The constructor code for the player.
@@ -39,6 +41,7 @@
 		 */
 		public function Player() {
 			// constructor code
+			collider = new AABB(width/2, height/2);
 		} // ends constructor
 
 		/**
@@ -55,6 +58,8 @@
 			detectGround();
 			
 			jumpingTimer();
+			
+			collider.calcEdges(x, y);
 			//trace(velocity.y);
 		}
 
@@ -154,7 +159,7 @@
 			if (isGrounded == false) {
 				airTime += Time.dt;
 				if (airTime > .3) {
-					gravity.y = baseGravity.y;
+					//gravity.y = baseGravity.y;
 				}
 			}
 		}

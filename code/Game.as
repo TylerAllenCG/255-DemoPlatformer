@@ -25,8 +25,21 @@
 		private function gameLoop(e: Event): void {
 			Time.update();
 			player.update();
+
+			doCollistionDetection();
+			
 			KeyboardInput.update();
 		} //ends gameLoop
+		
+		private function doCollistionDetection(): void{
+			
+			if(player.collider.checkOverlap(platform.collider)){
+				platform.alpha = .5;
+			}else{
+				platform.alpha = 1;
+			}
+			
+		}
 
 	} //ends game class
 

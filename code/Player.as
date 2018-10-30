@@ -1,4 +1,4 @@
-﻿package code {
+﻿ package code {
 
 	import flash.display.MovieClip;
 	import flash.geom.Point;
@@ -9,9 +9,9 @@
 	 */
 	public class Player extends MovieClip {
 		/** Holds the base gravity that the player will always be reset to. */
-		private const baseGravity: Point = new Point(0, 2000);
+		private const baseGravity: Point = new Point(0, 2500);
 		/** Holds the curret gravity of the player. */
-		private var gravity: Point = new Point(0, 1000);
+		private var gravity: Point = new Point(0, 2500);
 		/** The X and Y velocity of the player. */
 		private var velocity: Point = new Point(0, 0);
 		/** The maximum horizontal Speed the player can reach. */
@@ -49,6 +49,7 @@
 			doPhysics();
 
 			detectGround();
+			//trace(velocity.y);
 		}
 
 		/**
@@ -94,15 +95,19 @@
 		 * This function looks at the keyboard input to tell when the player can and should jump.
 		 */
 		private function handleJump(): void {
-			if (KeyboardInput.OnKeyDown(Keyboard.SPACE) && airTime < .4 && jumpCount <= 1) {
+			if (KeyboardInput.OnKeyDown(Keyboard.SPACE) && velocity.y <= 100 && jumpCount <= 1) {
 				isJumping = true;
-				gravity.y = 500;
+				//gravity.y = 300;
 				jumpCount += 1;
 				airTime = 0;
-				velocity.y = -300;
+				velocity.y = -500;
+				
 			}
 			if (KeyboardInput.IsKeyDown(Keyboard.SPACE) && airTime < .3 && isJumping == true) {
-				velocity.y -= VERTICAL_ACCELERATION * Time.dt;
+				//velocity.y -= VERTICAL_ACCELERATION * Time.dt;
+				gravity.y = 10;
+			}else{
+				gravity.y = baseGravity.y;
 			}
 		}
 

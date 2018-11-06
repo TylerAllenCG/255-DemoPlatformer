@@ -2,6 +2,7 @@
 
 	import flash.display.MovieClip;
 	import flash.events.Event;
+	import flash.geom.Point;
 
 	/**
 	 * The fountational class of this game.
@@ -9,6 +10,8 @@
 	 */
 	public class Game extends MovieClip {
 
+		static public var platforms:Array = new Array();
+		
 		/**
 		 * Sets up the stage and starts running the gameloop.
 		 */
@@ -33,11 +36,16 @@
 		
 		private function doCollistionDetection(): void{
 			
-			if(player.collider.checkOverlap(platform.collider)){
-				platform.alpha = .5;
-			}else{
-				platform.alpha = 1;
-			}
+			for (var i:int = 0; i < platforms.length; i++){
+				if(player.collider.checkOverlap(platforms[i].collider)){// if overlapping
+					// find the fix:
+					var fix:Point = player.collider.findOverlapFix(platforms[i].collider);
+					// apply the fix:
+					player.applyFix(fix);
+				}
+			}// ends for loop
+			
+			
 			
 		}
 

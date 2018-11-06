@@ -1,4 +1,4 @@
-﻿ package code {
+﻿package code {
 
 	import flash.display.MovieClip;
 	import flash.geom.Point;
@@ -23,17 +23,17 @@
 		/** Keeps track of if the player is in the air from a jump. */
 		private var isGrounded: Boolean = false;
 		/** Keeps track of if the player is moving upward, effects gravity. */
-		private var isJumping:Boolean = false;
+		private var isJumping: Boolean = false;
 		/** The rate at which the player can accelerate on the horizontal axis. */
 		private const HORIZONTAL_ACCELERATION: Number = 1000;
 		/** The rate at which the player decelerate on the horizontal axis. */
 		private const HORIZONTAL_DECELERATION: Number = 800;
 		/** The rate at which the player can accelerate on the vertical axis. */
 		private const VERTICAL_ACCELERATION: Number = 1500;
-		
-		private var jumpVelocity:Number = 600;
-		
-		public var collider:AABB;
+
+		private var jumpVelocity: Number = 600;
+
+		public var collider: AABB;
 
 		/**
 		 * The constructor code for the player.
@@ -41,7 +41,8 @@
 		 */
 		public function Player() {
 			// constructor code
-			collider = new AABB(width/2, height/2);
+			collider = new AABB(width / 2, height / 2);
+			//trace(width/2);
 		} // ends constructor
 
 		/**
@@ -49,17 +50,21 @@
 		 */
 		public function update(): void {
 
+
+
 			handleWalking();
 
 			handleJump();
 
 			doPhysics();
 
-			detectGround();
-			
-			jumpingTimer();
-			
+			//detectGround();
+
+			//jumpingTimer();
+
 			collider.calcEdges(x, y);
+
+			isGrounded = false;
 			//trace(velocity.y);
 		}
 
@@ -110,35 +115,36 @@
 		 * This function looks at the keyboard input to tell when the player can and should jump.
 		 */
 		private function handleJump(): void {
-			if (KeyboardInput.OnKeyDown(Keyboard.SPACE) && velocity.y <= 400 && jumpCount <= 1) {
-				isGrounded = false;
-				isJumping = true;
-				//gravity.y = 300;
-				jumpCount += 1;
-				airTime = 0;
-				velocity.y = -jumpVelocity;
-				
-			}
-			if (KeyboardInput.IsKeyDown(Keyboard.SPACE) && airTime < .3 && isGrounded == false) {
-				//velocity.y -= VERTICAL_ACCELERATION * Time.dt;
-				//gravity.y = 10;
+			if (KeyboardInput.OnKeyDown(Keyboard.SPACE) && velocity.y <= 400) {
+				if (isGrounded == true) {
+					velocity.y = -jumpVelocity;
+					isGrounded = false;
+					isJumping = true;
+					jumpCount += 1;
+				} else {
+					if (jumpCount <= 1) {
+						velocity.y = -jumpVelocity;
+						jumpCount += 1;
+						isJumping = true;
+					}
+				}
 			}
 			if (!KeyboardInput.IsKeyDown(Keyboard.SPACE)) {
 				isJumping = false;
 				gravity.y = baseGravity.y;
 			}
-			if(velocity.y > 0) isJumping = false;
+			if (velocity.y > 0) isJumping = false;
 		}
 
 		/**
 		 * The physics that govern the player's position.
 		 */
 		private function doPhysics(): void {
-			
-			var gravityMultiplier:Number = .5;
-			
-			if(!isJumping) gravityMultiplier = 1;
-			
+
+			var gravityMultiplier: Number = .5;
+
+			if (!isJumping) gravityMultiplier = 1;
+
 			// apply gravity to velocity:
 			//velocity.x += gravity.x * Time.dt * gravityMultiplier;
 			velocity.y += gravity.y * Time.dt * gravityMultiplier;
@@ -162,6 +168,23 @@
 					//gravity.y = baseGravity.y;
 				}
 			}
+		}
+
+		public function applyFix(fix: Point): void {
+			if (fix.x != 0) {
+				x += fix.x;
+				velocity.x = 0;
+			}
+			if (fix.y != 0) {
+				y += fix.y;
+				velocity.y = 0;
+			}
+			if (fix.y < 0) { //moved player up (they are standing on ground).
+				isGrounded = true;
+				isJumping = false;
+				jumpCount = 0;
+			}
+			collider.calcEdges(x, y);
 		}
 
 	} // ends plyer class

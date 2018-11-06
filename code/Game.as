@@ -10,8 +10,9 @@
 	 */
 	public class Game extends MovieClip {
 
-		static public var platforms:Array = new Array();
-		
+		/** Contains all the platforms. */
+		static public var platforms: Array = new Array();
+
 		/**
 		 * Sets up the stage and starts running the gameloop.
 		 */
@@ -29,25 +30,26 @@
 			Time.update();
 			player.update();
 
-			doCollistionDetection();
-			
+			doCollisionDetection();
+
 			KeyboardInput.update();
 		} //ends gameLoop
-		
-		private function doCollistionDetection(): void{
-			
-			for (var i:int = 0; i < platforms.length; i++){
-				if(player.collider.checkOverlap(platforms[i].collider)){// if overlapping
+
+		/**
+		 * Checks for collisions and readjusts the plays position when needed.
+		 */
+		private function doCollisionDetection(): void {
+
+			for (var i: int = 0; i < platforms.length; i++) {
+				if (player.collider.checkOverlap(platforms[i].collider)) { // if overlapping
 					// find the fix:
-					var fix:Point = player.collider.findOverlapFix(platforms[i].collider);
+					var fix: Point = player.collider.findOverlapFix(platforms[i].collider);
 					// apply the fix:
 					player.applyFix(fix);
 				}
-			}// ends for loop
-			
-			
-			
-		}
+			} // ends for loop
+
+		} // ends doCollisionDetection 
 
 	} //ends game class
 

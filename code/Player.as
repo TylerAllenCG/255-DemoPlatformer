@@ -17,7 +17,7 @@
 		/** The maximum horizontal Speed the player can reach. */
 		private var maxSpeed: Number = 300;
 		/** The amount of time in seconds the player has been in the air since their last jump. */
-		private var airTime: Number = 0;
+		//private var airTime: Number = 0;
 		/** The amount of times the player has jumped since touching the ground (should max at 2). */
 		private var jumpCount: Number = 0;
 		/** Keeps track of if the player is in the air from a jump. */
@@ -30,9 +30,9 @@
 		private const HORIZONTAL_DECELERATION: Number = 800;
 		/** The rate at which the player can accelerate on the vertical axis. */
 		private const VERTICAL_ACCELERATION: Number = 1500;
-
+		/** The impulse velocity that is added when the player jumps. */
 		private var jumpVelocity: Number = 600;
-
+		/** The player's AABB for collision detection. */
 		public var collider: AABB;
 
 		/**
@@ -42,7 +42,6 @@
 		public function Player() {
 			// constructor code
 			collider = new AABB(width / 2, height / 2);
-			//trace(width/2);
 		} // ends constructor
 
 		/**
@@ -50,45 +49,30 @@
 		 */
 		public function update(): void {
 
-
-
 			handleWalking();
 
 			handleJump();
 
 			doPhysics();
 
-			//detectGround();
-
-			//jumpingTimer();
-
 			collider.calcEdges(x, y);
 
 			isGrounded = false;
-			//trace(velocity.y);
 		}
 
 		/**
 		 * This function sets a maximum y value that the player can not cross.
-		 * This also adds a small area above the ground where the player can jump again.
 		 */
 		private function detectGround(): void {
 			//look at y position
 			var ground: Number = 350;
-			//var softGround: Number = 300;
 			if (y > ground) {
 				y = ground; // clamp
 				velocity.y = 0;
-				airTime = 0;
 				jumpCount = 0;
 				if (isGrounded == false) isGrounded = true;
 				isJumping = false;
 			}
-			/*if (y > softGround && velocity.y > 0) {
-				airTime = 0;
-				jumpCount = 0;
-				if (isJumping == true) isJumping = false;
-			}*/
 		}
 
 		/**
@@ -115,7 +99,7 @@
 		 * This function looks at the keyboard input to tell when the player can and should jump.
 		 */
 		private function handleJump(): void {
-			if (KeyboardInput.OnKeyDown(Keyboard.SPACE) && velocity.y <= 400) {
+			if (KeyboardInput.OnKeyDown(Keyboard.SPACE) && velocity.y <= 600) {
 				if (isGrounded == true) {
 					velocity.y = -jumpVelocity;
 					isGrounded = false;
@@ -158,18 +142,10 @@
 			y += velocity.y * Time.dt;
 		}
 
-		/**
-		 * Counts up the airTime when in the air and reaplys standard gravity after a set amount of air time.
+		/** 
+		 * This moves the player out of a collision zone when they are colliding with an object.
+		 * @param fix The adjustment to the player's x and y position.
 		 */
-		private function jumpingTimer(): void {
-			if (isGrounded == false) {
-				airTime += Time.dt;
-				if (airTime > .3) {
-					//gravity.y = baseGravity.y;
-				}
-			}
-		}
-
 		public function applyFix(fix: Point): void {
 			if (fix.x != 0) {
 				x += fix.x;

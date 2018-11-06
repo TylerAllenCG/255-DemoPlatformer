@@ -3,19 +3,34 @@
 
 	public class AABB {
 
+		/** Half of the width of this box. Used to calc edges. */
 		private var halfWidth: Number;
+		/** Half of the height of this box. Used to calc edges. */
 		private var halfHeight: Number;
-
+		/** The poisition on the x axis of the left edge of this box. */
 		public var xmin: Number;
+		/** The poisition on the x axis of the right edge of this box. */
 		public var xmax: Number;
+		/** The poisition on the y axis of the bottom edge of this box. */
 		public var ymin: Number;
+		/** The poisition on the y axis of the top edge of this box. */
 		public var ymax: Number;
 
+		/** 
+		 * The set up code for this AABB object.
+		 * @param halfWidth Half the width of this AABB
+		 * @param halfHeight Half the height of this AABB
+		 */
 		public function AABB(halfWidth: Number, halfHeight: Number) {
 			// constructor code
 			setSize(halfWidth, halfHeight);
 		}
 
+		/**
+		 * This sets the size of the AABB based on the actual objects dimentions.
+		 * @param halfWidth Half the width of this AABB
+		 * @param halfHeight Half the height of this AABB
+		 */
 		public function setSize(halfWidth: Number, halfHeight: Number): void {
 			this.halfWidth = halfWidth;
 			this.halfHeight = halfHeight;
@@ -24,6 +39,8 @@
 		}
 		/**
 		 * Calculate the position of the 4 edges from the center (x,y) position.
+		 * @param x The horizontal position of the boxes center/origin.
+		 * @param y The vertical position of the boxes center/origin.
 		 */
 		public function calcEdges(x: Number, y: Number): void {
 			xmin = x - halfWidth;
@@ -64,10 +81,10 @@
 
 			fix.x = (Math.abs(moveL) < Math.abs(moveR)) ? moveL : moveR;
 			fix.y = (Math.abs(moveU) < Math.abs(moveD)) ? moveU : moveD;
-			
-			if(Math.abs(fix.x) < Math.abs(fix.y)) fix.y = 0;
+
+			if (Math.abs(fix.x) < Math.abs(fix.y)) fix.y = 0;
 			else fix.x = 0;
-			
+
 			return fix;
 
 		}
